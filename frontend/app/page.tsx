@@ -25,10 +25,10 @@ const mockProperties: Property[] = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background p-4 sm:p-8">
+    <div className="min-h-full bg-background p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         <PropertyDashboard properties={mockProperties} />
       </div>
-    </main>
+    </div>
   )
 }

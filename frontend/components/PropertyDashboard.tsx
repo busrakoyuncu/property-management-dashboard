@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { Property, PropertyListProps } from '@/types/property'
 import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
 import { DeletePropertyModal } from './DeletePropertyModal'
+import { PropertyCreationModal } from './PropertyCreationModal'
 
 export function PropertyDashboard({ properties, onCreateNew, onDelete }: PropertyListProps) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
 
   const toggleRow = (propertyId: string) => {
     setExpandedRows((prev) => {
@@ -33,6 +35,16 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
       setPropertyToDelete(null)
     }
   }
+
+  const handleCreateClick = () => {
+    setCreateModalOpen(true)
+    onCreateNew?.()
+  }
+
+  const handleCreateComplete = (propertyData: any) => {
+    // TODO: Handle property creation
+    console.log('Property created:', propertyData)
+  }
   return (
     <div className="space-y-6">
       <DeletePropertyModal
@@ -41,6 +53,11 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
         propertyId={propertyToDelete?.id || ''}
         propertyName={propertyToDelete?.name}
         onConfirm={handleConfirmDelete}
+      />
+      <PropertyCreationModal
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onComplete={handleCreateComplete}
       />
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -52,8 +69,8 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
         </div>
         {properties.length > 0 && (
           <button
-            onClick={onCreateNew}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-buena-green/95 focus:outline-none focus:ring-2 focus:ring-buena-orange focus:ring-offset-2"
+            onClick={handleCreateClick}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-buena-green/95"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Create new property</span>
@@ -74,7 +91,7 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
               Get started by creating your first property
             </p>
             <button
-              onClick={onCreateNew}
+              onClick={handleCreateClick}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-buena-green/95"
             >
               <Plus className="h-4 w-4" />
