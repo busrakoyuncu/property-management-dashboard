@@ -4,24 +4,24 @@ import { BuenaLogo } from './BuenaLogo'
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-20">
-      <div className="flex h-16 items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="https://www.buena.com/en/home" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-20">
+      <div className="flex h-16 items-center justify-between gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <Link href="https://www.buena.com/en/home" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <BuenaIcon />
             <BuenaLogo />
           </Link>
-            <span className="text-sm text-muted-foreground">Property Management</span>
+          <span className="text-xs sm:text-sm text-muted-foreground hidden md:inline-block whitespace-nowrap">Property Management</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground hidden sm:inline-block">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <span className="text-xs sm:text-sm text-muted-foreground hidden lg:inline-block">
             Looking for a property manager?
           </span>
           <a
             href="https://www.buena.com/en/offer?utm_id=id-zizby7ggc"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gray-100"
+            className="inline-flex items-center justify-center rounded-full border border-gray-300 bg-gray-50 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground transition-colors hover:bg-gray-100 whitespace-nowrap"
           >
             Request offer
           </a>

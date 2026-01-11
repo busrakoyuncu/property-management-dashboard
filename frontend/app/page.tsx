@@ -1,9 +1,33 @@
+import { PropertyDashboard } from '@/components/PropertyDashboard'
+import { Property } from '@/types/property'
+
+// TODO: Replace with actual API call
+const mockProperties: Property[] = [
+  {
+    id: '1',
+    name: 'Parkview Condominium',
+    type: 'WEG',
+    uniqueNumber: 'PROP-2024-001',
+  },
+  {
+    id: '2',
+    name: 'Riverside Apartments',
+    type: 'MV',
+    uniqueNumber: 'PROP-2024-002',
+  },
+  {
+    id: '3',
+    name: 'Downtown Complex',
+    type: 'WEG',
+    uniqueNumber: 'PROP-2024-003',
+  },
+]
+
 export default function Home() {
   return (
-    <main className="min-h-screen p-8">
+    <main className="min-h-screen bg-background p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Property Dashboard</h1>
-        <p className="text-gray-600">Property management system coming soon...</p>
+        <PropertyDashboard properties={mockProperties} />
       </div>
     </main>
   )
