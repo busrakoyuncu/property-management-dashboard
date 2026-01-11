@@ -1,5 +1,9 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { PropertyDashboard } from '@/components/PropertyDashboard'
 import { Property } from '@/types/property'
+import { Loading } from '@/components/Loading'
 
 // TODO: Replace with actual API call
 const mockProperties: Property[] = [
@@ -24,6 +28,20 @@ const mockProperties: Property[] = [
 ]
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 1500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (isLoading) {
+    return <Loading />
+  }
+
   return (
     <div className="min-h-full bg-background p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">

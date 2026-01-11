@@ -56,7 +56,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <label className="text-sm font-semibold mb-2 block text-foreground">
             Property Number
