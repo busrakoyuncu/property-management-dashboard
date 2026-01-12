@@ -83,6 +83,71 @@ export interface CreatePropertyDto {
 
 export interface UpdatePropertyDto extends Partial<CreatePropertyDto> {}
 
+export interface ParsedPropertyData {
+  property: {
+    name?: string
+    propertyNumber?: string
+    managementType?: 'WEG' | 'MV'
+    totalAreaSqm?: number
+    totalMea?: number
+    landRegistryDistrict?: string
+    landRegistrySheet?: string
+    cadastralDistrict?: string
+    cadastralParcel?: string
+    cadastralPlot?: string
+    notaryReference?: string
+    declarationDate?: string
+    energyStandard?: string
+    heatingType?: string
+    originalOwner?: string
+    managerAppointmentYears?: number
+    propertyManagerName?: string
+    propertyManagerEmail?: string
+    propertyManagerPhone?: string
+    propertyManagerStreet?: string
+    propertyManagerHouseNumber?: string
+    propertyManagerPostalCode?: string
+    propertyManagerCity?: string
+    accountantName?: string
+    accountantEmail?: string
+    accountantPhone?: string
+    accountantStreet?: string
+    accountantHouseNumber?: string
+    accountantPostalCode?: string
+    accountantCity?: string
+  }
+  buildings: Array<{
+    code?: string
+    name?: string
+    street: string
+    houseNumber: string
+    postalCode: string
+    city: string
+    constructionYear?: number
+    floors?: number
+    hasElevator: boolean
+    isBarrierFree: boolean
+    buildingType: 'RESIDENTIAL' | 'COMMERCIAL' | 'MIXED'
+    parkingAccess?: string
+    description?: string
+  }>
+  units: Array<{
+    unitNumber: string
+    unitType: 'APARTMENT' | 'OFFICE' | 'GARDEN' | 'PARKING'
+    parkingNumber?: string
+    buildingCode?: string
+    floor?: string
+    entrance?: string
+    position?: string
+    sizeSqm?: number
+    rooms?: number
+    meaShare: number
+    constructionYear?: number
+    description?: string
+    specialUseRights?: string
+  }>
+}
+
 export const propertiesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // Get all properties
@@ -140,6 +205,19 @@ export const propertiesApi = api.injectEndpoints({
         { type: 'Property' as const, id: 'LIST' },
       ],
     }),
+
+    // Parse PDF
+    parsePdf: builder.mutation<ParsedPropertyData, File>({
+      query: (file: File) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        return {
+          url: '/properties/parse-pdf',
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
   }),
 })
 
@@ -149,4 +227,5 @@ export const {
   useCreatePropertyMutation,
   useUpdatePropertyMutation,
   useDeletePropertyMutation,
+  useParsePdfMutation,
 } = propertiesApi

@@ -70,6 +70,26 @@ export interface PropertyFormData {
   // File upload
   declarationFile?: File | null
   
+  // Extracted contact information from PDF (for pre-filling contact creation)
+  extractedPropertyManager?: {
+    companyName: string
+    email?: string
+    phone?: string
+    street?: string
+    houseNumber?: string
+    postalCode?: string
+    city?: string
+  }
+  extractedAccountant?: {
+    companyName: string
+    email?: string
+    phone?: string
+    street?: string
+    houseNumber?: string
+    postalCode?: string
+    city?: string
+  }
+  
   // Step 2: Building Data
   buildings: Building[]
   // Step 3: Units

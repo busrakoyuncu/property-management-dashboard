@@ -53,6 +53,12 @@ npm run dev:backend   # Backend on http://localhost:3000 (or configured port)
 2. **Building Data**: Multiple buildings per property
 3. **Units**: Add units to buildings with detailed information
 
+### AI-Powered PDF Parsing
+- Upload Teilungserklärung (Declaration of Division) PDFs
+- Automatic extraction of property, building, and unit information using OpenAI
+- Auto-fill all form fields with parsed data
+- Integrated into the property creation wizard
+
 ## License
 
 Private - Buena Tech Case Study
