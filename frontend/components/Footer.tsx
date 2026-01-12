@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="fixed bottom-0 left-0 right-0 z-40 w-full border-t bg-[#010105]">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-20">
         <div className="flex items-center gap-2 sm:gap-4">
-          <Link href="/" className="flex items-center gap-2 sm:gap-4">
+          <Link href="https://www.buena.com/en/home" className="flex items-center gap-2 sm:gap-4">
             <div className="text-white">
               <BuenaIcon />
             </div>
@@ -15,7 +15,6 @@ export function Footer() {
               <BuenaLogo />
             </div>
           </Link>
-          <span className="text-xs sm:text-sm text-white hidden md:inline-block whitespace-nowrap">Property Management</span>
         </div>
         <div className="flex items-center gap-4">
           <a

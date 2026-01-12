@@ -18,10 +18,10 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
   }, [isAddingNew, editingIndex, onEditingChange])
 
   const unitTypes: { value: UnitType; label: string }[] = [
-    { value: 'Apartment', label: 'Apartment' },
-    { value: 'Office', label: 'Office' },
-    { value: 'Parking', label: 'Parking' },
-    { value: 'Garden', label: 'Garden' },
+    { value: 'APARTMENT', label: 'Apartment' },
+    { value: 'OFFICE', label: 'Office' },
+    { value: 'PARKING', label: 'Parking' },
+    { value: 'GARDEN', label: 'Garden' },
   ]
 
   const handleAddUnit = () => {
@@ -80,7 +80,8 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
 
   const getBuildingName = (buildingId: string) => {
     const building = formData.buildings.find(b => b.id === buildingId)
-    return building ? building.name : buildingId
+    if (!building) return buildingId
+    return building.name || building.code || 'Unnamed Building'
   }
 
   return (
@@ -89,8 +90,8 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
         open={deleteModalOpen}
         onOpenChange={setDeleteModalOpen}
         unitId={unitToDelete?.unit.id || ''}
-        unitNumber={unitToDelete?.unit.number || ''}
-        unitType={unitToDelete?.unit.type}
+        unitNumber={unitToDelete?.unit.unitNumber || ''}
+        unitType={unitToDelete?.unit.unitType}
         onConfirm={handleConfirmDelete}
       />
       <div className="space-y-6">
@@ -146,18 +147,28 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h4 className="font-semibold text-foreground">Unit {unit.number}</h4>
+                        <h4 className="font-semibold text-foreground">Unit {unit.unitNumber}</h4>
                         <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                          {unit.type}
+                          {unit.unitType.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
                         </span>
                       </div>
                       <div className="text-sm text-muted-foreground space-y-1">
                         <p>Building: {getBuildingName(unit.buildingId)}</p>
                         <p>
-                          Floor: {unit.floor} • Entrance: {unit.entrance} • Size: {unit.size} m² • Rooms: {unit.rooms}
+                          {unit.floor && `Floor: ${unit.floor}`}
+                          {unit.floor && unit.entrance && ' • '}
+                          {unit.entrance && `Entrance: ${unit.entrance}`}
+                          {unit.position && (unit.floor || unit.entrance) && ' • '}
+                          {unit.position && `Position: ${unit.position}`}
+                          {unit.sizeSqm && (unit.floor || unit.entrance || unit.position) && ' • '}
+                          {unit.sizeSqm && `Size: ${unit.sizeSqm} m²`}
+                          {unit.rooms && (unit.floor || unit.entrance || unit.position || unit.sizeSqm) && ' • '}
+                          {unit.rooms && `Rooms: ${unit.rooms}`}
                         </p>
                         <p>
-                          Co-ownership share: {unit.coOwnershipShare} • Construction year: {unit.constructionYear}
+                          MEA share: {unit.meaShare}
+                          {unit.constructionYear && ` • Construction year: ${unit.constructionYear}`}
+                          {unit.parkingNumber && ` • Parking: ${unit.parkingNumber}`}
                         </p>
                         {unit.description && (
                           <p className="text-xs mt-2">{unit.description}</p>
@@ -204,23 +215,26 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
 interface UnitFormProps {
   unit: Unit | null
   unitTypes: { value: UnitType; label: string }[]
-  buildings: Array<{ id: string; name: string }>
+  buildings: Array<{ id: string; name?: string; code?: string }>
   onSave: (unit: Omit<Unit, 'id'>) => void
   onCancel: () => void
 }
 
 function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProps) {
   const [formData, setFormData] = useState<Omit<Unit, 'id'>>({
-    number: unit?.number || '',
-    type: unit?.type || 'Apartment',
+    unitNumber: unit?.unitNumber || '',
+    unitType: unit?.unitType || 'APARTMENT',
+    parkingNumber: unit?.parkingNumber || '',
     buildingId: unit?.buildingId || (buildings.length > 0 ? buildings[0].id : ''),
     floor: unit?.floor || '',
     entrance: unit?.entrance || '',
-    size: unit?.size || '',
-    coOwnershipShare: unit?.coOwnershipShare || '',
-    constructionYear: unit?.constructionYear || '',
+    position: unit?.position || '',
+    sizeSqm: unit?.sizeSqm || '',
     rooms: unit?.rooms || '',
+    meaShare: unit?.meaShare || '',
+    constructionYear: unit?.constructionYear || '',
     description: unit?.description || '',
+    specialUseRights: unit?.specialUseRights || '',
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -252,8 +266,8 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
             </label>
             <input
               type="text"
-              value={formData.number}
-              onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+              value={formData.unitNumber}
+              onChange={(e) => setFormData({ ...formData, unitNumber: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., 01, 02"
               required
@@ -265,8 +279,8 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
               Unit Type <span className="text-destructive">*</span>
             </label>
             <select
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value as UnitType })}
+              value={formData.unitType}
+              onChange={(e) => setFormData({ ...formData, unitType: e.target.value as UnitType })}
               className="w-full h-11 pl-4 pr-10 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm appearance-none bg-no-repeat bg-[length:16px_16px] bg-[right_12px_center]"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
@@ -280,6 +294,19 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
               ))}
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold mb-2 block text-foreground">
+            Parking Number
+          </label>
+          <input
+            type="text"
+            value={formData.parkingNumber || ''}
+            onChange={(e) => setFormData({ ...formData, parkingNumber: e.target.value })}
+            className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
+            placeholder="Parking number"
+          />
         </div>
 
         <div>
@@ -300,39 +327,50 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
             ) : (
               buildings.map((building) => (
                 <option key={building.id} value={building.id}>
-                  {building.name}
+                  {building.name || building.code || 'Unnamed Building'}
                 </option>
               ))
             )}
           </select>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Floor <span className="text-destructive">*</span>
+              Floor
             </label>
             <input
               type="text"
-              value={formData.floor}
+              value={formData.floor || ''}
               onChange={(e) => setFormData({ ...formData, floor: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., Erdgeschoss, 1 Obergeschoss"
-              required
             />
           </div>
 
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Entrance <span className="text-destructive">*</span>
+              Entrance
             </label>
             <input
               type="text"
-              value={formData.entrance}
+              value={formData.entrance || ''}
               onChange={(e) => setFormData({ ...formData, entrance: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., A, B"
-              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold mb-2 block text-foreground">
+              Position
+            </label>
+            <input
+              type="text"
+              value={formData.position || ''}
+              onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+              className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
+              placeholder="Position"
             />
           </div>
         </div>
@@ -340,58 +378,68 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Size (m²) <span className="text-destructive">*</span>
+              Size (m²)
             </label>
             <input
               type="text"
-              value={formData.size}
-              onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+              value={formData.sizeSqm || ''}
+              onChange={(e) => setFormData({ ...formData, sizeSqm: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., 95.00"
-              required
             />
           </div>
 
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Co-ownership Share <span className="text-destructive">*</span>
+              MEA Share <span className="text-destructive">*</span>
             </label>
             <input
               type="text"
-              value={formData.coOwnershipShare}
-              onChange={(e) => setFormData({ ...formData, coOwnershipShare: e.target.value })}
+              value={formData.meaShare}
+              onChange={(e) => setFormData({ ...formData, meaShare: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
-              placeholder="e.g., 110.0/1000"
+              placeholder="e.g., 110.0"
               required
             />
           </div>
 
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Construction Year <span className="text-destructive">*</span>
+              Construction Year
             </label>
             <input
               type="text"
-              value={formData.constructionYear}
+              value={formData.constructionYear || ''}
               onChange={(e) => setFormData({ ...formData, constructionYear: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., 2023"
-              required
             />
           </div>
         </div>
 
         <div>
           <label className="text-sm font-semibold mb-2 block text-foreground">
-            Rooms <span className="text-destructive">*</span>
+            Rooms
           </label>
           <input
             type="text"
-            value={formData.rooms}
+            value={formData.rooms || ''}
             onChange={(e) => setFormData({ ...formData, rooms: e.target.value })}
             className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
             placeholder="e.g., 3"
-            required
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold mb-2 block text-foreground">
+            Special Use Rights
+          </label>
+          <input
+            type="text"
+            value={formData.specialUseRights || ''}
+            onChange={(e) => setFormData({ ...formData, specialUseRights: e.target.value })}
+            className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
+            placeholder="Special use rights"
           />
         </div>
 

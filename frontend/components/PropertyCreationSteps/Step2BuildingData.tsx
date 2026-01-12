@@ -18,9 +18,9 @@ export function Step2BuildingData({ formData, onUpdate, onEditingChange }: StepC
   }, [isAddingNew, editingIndex, onEditingChange])
 
   const buildingTypes: { value: BuildingType; label: string }[] = [
-    { value: 'residential', label: 'Residential' },
-    { value: 'mixed-use', label: 'Mixed-use' },
-    { value: 'commercial', label: 'Commercial' },
+    { value: 'RESIDENTIAL', label: 'Residential' },
+    { value: 'MIXED', label: 'Mixed-use' },
+    { value: 'COMMERCIAL', label: 'Commercial' },
   ]
 
   const handleAddBuilding = () => {
@@ -137,14 +137,21 @@ export function Step2BuildingData({ formData, onUpdate, onEditingChange }: StepC
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-semibold text-foreground">{building.name}</h4>
-                      <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground capitalize">
-                        {building.buildingType.replace('-', ' ')}
+                      <h4 className="font-semibold text-foreground">{building.name || building.code || 'Unnamed Building'}</h4>
+                      <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
+                        {building.buildingType.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                     </div>
                     <div className="text-sm text-muted-foreground space-y-1">
                       <p>{building.street} {building.houseNumber}, {building.postalCode} {building.city}</p>
-                      <p>Construction year: {building.constructionYear} • Floors: {building.floors} • {building.hasElevator ? 'Has elevator' : 'No elevator'}</p>
+                      <p>
+                        {building.constructionYear && `Construction year: ${building.constructionYear}`}
+                        {building.constructionYear && building.floors && ' • '}
+                        {building.floors && `Floors: ${building.floors}`}
+                        {(building.constructionYear || building.floors) && ' • '}
+                        {building.hasElevator ? 'Has elevator' : 'No elevator'}
+                        {building.isBarrierFree && ' • Barrier-free'}
+                      </p>
                       {building.description && (
                         <p className="text-xs mt-2">{building.description}</p>
                       )}
@@ -196,6 +203,7 @@ interface BuildingFormProps {
 
 function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFormProps) {
   const [formData, setFormData] = useState<Omit<Building, 'id'>>({
+    code: building?.code || '',
     name: building?.name || '',
     street: building?.street || '',
     houseNumber: building?.houseNumber || '',
@@ -204,7 +212,9 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
     constructionYear: building?.constructionYear || '',
     floors: building?.floors || '',
     hasElevator: building?.hasElevator || false,
-    buildingType: building?.buildingType || 'residential',
+    isBarrierFree: building?.isBarrierFree || false,
+    buildingType: building?.buildingType || 'RESIDENTIAL',
+    parkingAccess: building?.parkingAccess || '',
     description: building?.description || '',
   })
 
@@ -230,18 +240,31 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
       </div>
 
       <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-semibold mb-2 block text-foreground">
+              Building Code
+            </label>
+            <input
+              type="text"
+              value={formData.code || ''}
+              onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+              className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
+              placeholder="Building code"
+            />
+          </div>
         <div>
           <label className="text-sm font-semibold mb-2 block text-foreground">
-            Building Name <span className="text-destructive">*</span>
+              Building Name
           </label>
           <input
             type="text"
-            value={formData.name}
+              value={formData.name || ''}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
             placeholder="e.g., Haus A - Parkside"
-            required
           />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -304,32 +327,30 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Construction Year <span className="text-destructive">*</span>
+              Construction Year
             </label>
             <input
               type="text"
-              value={formData.constructionYear}
+              value={formData.constructionYear || ''}
               onChange={(e) => setFormData({ ...formData, constructionYear: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., 2023"
-              required
             />
           </div>
 
           <div>
             <label className="text-sm font-semibold mb-2 block text-foreground">
-              Number of Floors <span className="text-destructive">*</span>
+              Number of Floors
             </label>
             <input
               type="text"
-              value={formData.floors}
+              value={formData.floors || ''}
               onChange={(e) => setFormData({ ...formData, floors: e.target.value })}
               className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
               placeholder="e.g., 5"
-              required
             />
           </div>
 
@@ -355,6 +376,7 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
           </div>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-semibold mb-2 block text-foreground">
             <input
@@ -365,6 +387,31 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
             />
             Has Elevator
           </label>
+          </div>
+          <div>
+            <label className="text-sm font-semibold mb-2 block text-foreground">
+              <input
+                type="checkbox"
+                checked={formData.isBarrierFree}
+                onChange={(e) => setFormData({ ...formData, isBarrierFree: e.target.checked })}
+                className="mr-2"
+              />
+              Is Barrier-Free
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold mb-2 block text-foreground">
+            Parking Access
+          </label>
+          <input
+            type="text"
+            value={formData.parkingAccess || ''}
+            onChange={(e) => setFormData({ ...formData, parkingAccess: e.target.value })}
+            className="w-full h-11 px-4 border border-input bg-background rounded-lg focus:outline-none focus:border-gray-400 text-sm"
+            placeholder="Parking access information"
+          />
         </div>
 
         <div>
