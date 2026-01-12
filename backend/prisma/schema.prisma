@@ -1,0 +1,178 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ENUMS
+
+enum ManagementType {
+  WEG
+  MV
+}
+
+enum BuildingType {
+  RESIDENTIAL
+  COMMERCIAL
+  MIXED
+}
+
+enum UnitType {
+  APARTMENT
+  OFFICE
+  GARDEN
+  PARKING
+}
+
+enum ContactRole {
+  PROPERTY_MANAGER
+  ACCOUNTANT
+}
+
+// CONTACTS (Property Managers & Accountants)
+
+model Contact {
+  id          String      @id @default(uuid())
+  role        ContactRole
+  companyName String      @map("company_name")
+  street      String?
+  houseNumber String?     @map("house_number")
+  postalCode  String?     @map("postal_code")
+  city        String?
+  email       String?
+  phone       String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  managedProperties   Property[] @relation("PropertyManager")
+  accountedProperties Property[] @relation("Accountant")
+
+  @@index([role])
+  @@map("contacts")
+}
+
+// PROPERTIES
+
+model Property {
+  id             String         @id @default(uuid())
+  propertyNumber String         @unique @map("property_number")
+  name           String
+  managementType ManagementType @map("management_type")
+
+  // Land registry (Grundbuch)
+  landRegistryDistrict String?  @map("land_registry_district")
+  landRegistrySheet    String?  @map("land_registry_sheet")
+  cadastralDistrict    String?  @map("cadastral_district")
+  cadastralParcel      String?  @map("cadastral_parcel")
+  cadastralPlot        String?  @map("cadastral_plot")
+  totalAreaSqm         Decimal? @map("total_area_sqm") @db.Decimal(12, 2)
+
+  // Co-ownership
+  totalMea Int @default(1000) @map("total_mea")
+
+  // Legal reference
+  notaryReference String?   @map("notary_reference")
+  declarationDate DateTime? @map("declaration_date") @db.Date
+
+  // Technical
+  energyStandard String? @map("energy_standard")
+  heatingType    String? @map("heating_type")
+
+  // Original owner/developer
+  originalOwner String? @map("original_owner")
+
+  // Assigned contacts
+  propertyManagerId       String?  @map("property_manager_id")
+  propertyManager         Contact? @relation("PropertyManager", fields: [propertyManagerId], references: [id])
+  accountantId            String?  @map("accountant_id")
+  accountant              Contact? @relation("Accountant", fields: [accountantId], references: [id])
+  managerAppointmentYears Int?     @map("manager_appointment_years")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  buildings Building[]
+
+  @@map("properties")
+}
+
+// BUILDINGS
+
+model Building {
+  id         String @id @default(uuid())
+  propertyId String @map("property_id")
+
+  // Identification
+  code String?
+  name String?
+
+  // Address
+  street      String
+  houseNumber String @map("house_number")
+  postalCode  String @map("postal_code")
+  city        String
+
+  // Building details
+  buildingType     BuildingType @default(RESIDENTIAL) @map("building_type")
+  constructionYear Int?         @map("construction_year")
+  floors           Int?
+  hasElevator      Boolean      @default(false) @map("has_elevator")
+  isBarrierFree    Boolean      @default(false) @map("is_barrier_free")
+  parkingAccess    String?      @map("parking_access")
+  description      String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  units    Unit[]
+
+  @@unique([propertyId, code])
+  @@index([propertyId])
+  @@map("buildings")
+}
+
+// UNITS
+
+model Unit {
+  id         String @id @default(uuid())
+  buildingId String @map("building_id")
+
+  // Identification
+  unitNumber    String   @map("unit_number")
+  unitType      UnitType @map("unit_type")
+  parkingNumber String?  @map("parking_number")
+
+  // Location
+  floor    String?
+  entrance String?
+  position String?
+
+  // Size & ownership
+  sizeSqm  Decimal? @map("size_sqm") @db.Decimal(10, 2)
+  rooms    Int?
+  meaShare Decimal  @map("mea_share") @db.Decimal(10, 2)
+
+  // Additional
+  constructionYear Int?    @map("construction_year")
+  description      String?
+  specialUseRights String? @map("special_use_rights")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@unique([buildingId, unitNumber])
+  @@index([buildingId])
+  @@map("units")
+}
