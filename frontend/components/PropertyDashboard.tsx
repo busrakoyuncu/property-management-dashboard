@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Property, useDeletePropertyMutation } from '@/lib/store/api/properties'
 import { useGetBuildingsQuery, Building } from '@/lib/store/api/buildings'
 import { useGetUnitsQuery } from '@/lib/store/api/units'
@@ -296,9 +296,8 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
                 {properties.map((property) => {
                   const isExpanded = expandedRows.has(property.id)
                   return (
-                    <>
+                    <React.Fragment key={property.id}>
                       <tr
-                        key={property.id}
                         className="border-b transition-colors hover:bg-muted/50 cursor-pointer"
                         onClick={() => toggleRow(property.id)}
                       >
@@ -348,7 +347,7 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
                     </td>
                       </tr>
                       {isExpanded && (
-                        <tr key={`${property.id}-details`} className="border-b bg-muted/30">
+                        <tr className="border-b bg-muted/30">
                           <td colSpan={4} className="p-4 sm:p-6">
                             <div className="space-y-4">
                               <div className="mb-2 md:hidden">
@@ -485,7 +484,7 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
                           </td>
                         </tr>
                       )}
-                    </>
+                    </React.Fragment>
                   )
                 })}
               </tbody>

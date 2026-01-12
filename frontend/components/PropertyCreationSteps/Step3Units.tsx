@@ -2,14 +2,25 @@
 
 import React, { useState } from 'react'
 import { StepComponentProps, Unit, UnitType } from '@/types/propertyForm'
-import { Plus, Trash2, Edit2, X, Check } from 'lucide-react'
+import { Plus, Trash2, Edit2, X, Check, Table, List, Upload, Sparkles } from 'lucide-react'
 import { DeleteUnitModal } from '../DeleteUnitModal'
+import { UnitsTable } from './Step3UnitsTable'
+import { BulkUnitImport } from './BulkUnitImport'
+import { BulkUnitPattern } from './BulkUnitPattern'
+import { QuickAddUnit } from './QuickAddUnit'
+import { Button } from '@/components/ui/button'
+
+type ViewMode = 'list' | 'table'
 
 export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponentProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [unitToDelete, setUnitToDelete] = useState<{ index: number; unit: Unit } | null>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('table')
+  const [showBulkImport, setShowBulkImport] = useState(false)
+  const [showBulkPattern, setShowBulkPattern] = useState(false)
+  const [quickAddMode, setQuickAddMode] = useState(false)
 
   // Notify parent when editing state changes
   React.useEffect(() => {
@@ -74,6 +85,45 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
     handleCancelEdit()
   }
 
+  const handleBulkImport = (importedUnits: Omit<Unit, 'id'>[]) => {
+    const newUnits: Unit[] = importedUnits.map((unit, idx) => ({
+      ...unit,
+      id: `unit-${Date.now()}-${idx}`,
+    }))
+    onUpdate({ units: [...formData.units, ...newUnits] })
+  }
+
+  const handleBulkPattern = (generatedUnits: Omit<Unit, 'id'>[]) => {
+    const newUnits: Unit[] = generatedUnits.map((unit, idx) => ({
+      ...unit,
+      id: `unit-${Date.now()}-${idx}`,
+    }))
+    onUpdate({ units: [...formData.units, ...newUnits] })
+  }
+
+  const handleDuplicate = (unit: Unit) => {
+    const duplicated: Unit = {
+      ...unit,
+      id: `unit-${Date.now()}`,
+      unitNumber: `${unit.unitNumber}-copy`,
+    }
+    onUpdate({ units: [...formData.units, duplicated] })
+  }
+
+  const handleTableUpdate = (updatedUnits: Unit[]) => {
+    onUpdate({ units: updatedUnits })
+  }
+
+  const handleTableEdit = (unit: Unit, index: number) => {
+    handleEditUnit(index)
+    // Switch to list view to show the edit form
+    setViewMode('list')
+  }
+
+  const handleTableDelete = (index: number) => {
+    handleDeleteClick(index)
+  }
+
   const currentUnit = editingIndex !== null && editingIndex >= 0 
     ? formData.units[editingIndex] 
     : null
@@ -95,7 +145,7 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
         onConfirm={handleConfirmDelete}
       />
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h3 className="text-sm font-semibold text-foreground">
               Units ({formData.units.length})
@@ -104,31 +154,145 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
               Add units to buildings. Supported types: Apartment, Office, Garden, Parking
             </p>
           </div>
-          {!isAddingNew && editingIndex === null && (
-            <button
-              type="button"
-              onClick={handleAddUnit}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-buena-green/90"
-            >
-              <Plus className="h-4 w-4" />
-              Add Unit
-            </button>
+          {!isAddingNew && editingIndex === null && !showBulkImport && !showBulkPattern && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1 border rounded-lg p-1 bg-background">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('table')}
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                    viewMode === 'table'
+                      ? 'bg-buena-green text-white'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <Table className="h-3 w-3 inline mr-1" />
+                  Table
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                    viewMode === 'list'
+                      ? 'bg-buena-green text-white'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <List className="h-3 w-3 inline mr-1" />
+                  List
+                </button>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowBulkPattern(true)}
+                className="rounded-full"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Generate Pattern
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowBulkImport(true)}
+                className="rounded-full"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Import CSV
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setQuickAddMode(true)}
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Quick Add
+              </Button>
+              <Button
+                type="button"
+                onClick={handleAddUnit}
+                className="rounded-full bg-buena-green hover:bg-buena-green/90"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Full Form
+              </Button>
+            </div>
           )}
         </div>
 
-        {/* Unit Form (Add/Edit) */}
-        {(isAddingNew || editingIndex !== null) && (
-          <UnitForm
-            unit={currentUnit}
-            unitTypes={unitTypes}
+        {/* Bulk Import */}
+        {showBulkImport && (
+          <BulkUnitImport
             buildings={formData.buildings}
-            onSave={handleSaveUnit}
-            onCancel={handleCancelEdit}
+            onImport={handleBulkImport}
+            onCancel={() => setShowBulkImport(false)}
           />
         )}
 
-        {/* Units List */}
-        {formData.units.length > 0 && (
+        {/* Bulk Pattern */}
+        {showBulkPattern && (
+          <BulkUnitPattern
+            buildings={formData.buildings}
+            onGenerate={handleBulkPattern}
+            onCancel={() => setShowBulkPattern(false)}
+          />
+        )}
+
+        {/* Quick Add Mode */}
+        {quickAddMode && !isAddingNew && editingIndex === null && (
+          <QuickAddUnit
+            buildings={formData.buildings}
+            lastUnit={formData.units[formData.units.length - 1]}
+            onSave={(unitData) => {
+              const newUnit: Unit = {
+                ...unitData,
+                id: `unit-${Date.now()}`,
+              }
+              onUpdate({ units: [...formData.units, newUnit] })
+              // Form stays open for next unit
+            }}
+            onCancel={() => setQuickAddMode(false)}
+          />
+        )}
+
+        {/* Unit Form (Add/Edit) - Show in both views */}
+        {(isAddingNew || editingIndex !== null) && (
+          <div className="mb-6">
+            <UnitForm
+              unit={currentUnit}
+              unitTypes={unitTypes}
+              buildings={formData.buildings}
+              onSave={(unitData) => {
+                handleSaveUnit(unitData)
+                setQuickAddMode(false)
+              }}
+              onCancel={() => {
+                handleCancelEdit()
+                setQuickAddMode(false)
+              }}
+            />
+          </div>
+        )}
+
+        {/* Units Table View */}
+        {viewMode === 'table' && formData.units.length > 0 && !showBulkImport && !showBulkPattern && !isAddingNew && editingIndex === null && (
+          <UnitsTable
+            units={formData.units}
+            buildings={formData.buildings}
+            onUpdate={handleTableUpdate}
+            onEdit={handleTableEdit}
+            onDelete={handleTableDelete}
+            onDuplicate={handleDuplicate}
+          />
+        )}
+
+        {/* Units List View */}
+        {viewMode === 'list' && formData.units.length > 0 && !showBulkImport && !showBulkPattern && !quickAddMode && (
           <div className="space-y-4">
             {formData.units.map((unit, index) => (
               <div
@@ -162,8 +326,8 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
                           {unit.position && `Position: ${unit.position}`}
                           {unit.sizeSqm && (unit.floor || unit.entrance || unit.position) && ' • '}
                           {unit.sizeSqm && `Size: ${unit.sizeSqm} m²`}
-                          {unit.rooms && (unit.floor || unit.entrance || unit.position || unit.sizeSqm) && ' • '}
-                          {unit.rooms && `Rooms: ${unit.rooms}`}
+                          {(unit.floor || unit.entrance || unit.position || unit.sizeSqm) && ' • '}
+                          {unit.rooms && unit.rooms !== '0' ? `Rooms: ${unit.rooms}` : '- rooms'}
                         </p>
                         <p>
                           MEA share: {unit.meaShare}
