@@ -6,7 +6,10 @@ import {
   IsBoolean,
   IsUUID,
 } from 'class-validator';
-import { BuildingType } from '@prisma/client';
+// Import from generated Prisma client (workaround for monorepo module resolution)
+import type { BuildingType } from '../../../../node_modules/.prisma/client';
+// Re-export for runtime
+const { BuildingType: BuildingTypeEnum } = require('@prisma/client');
 
 export class CreateBuildingDto {
   @IsUUID()
@@ -33,7 +36,7 @@ export class CreateBuildingDto {
   city: string;
 
   @IsOptional()
-  @IsEnum(BuildingType)
+  @IsEnum(BuildingTypeEnum)
   buildingType?: BuildingType;
 
   @IsOptional()

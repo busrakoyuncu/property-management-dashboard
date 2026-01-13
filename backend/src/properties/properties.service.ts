@@ -11,7 +11,8 @@ export class PropertiesService {
   async create(createPropertyDto: CreatePropertyDto) {
     const { buildings, declarationDate, ...propertyData } = createPropertyDto;
 
-    return this.prisma.property.create({
+    try {
+      return await this.prisma.property.create({
       data: {
         ...propertyData,
         declarationDate: declarationDate ? new Date(declarationDate) : null,
@@ -63,6 +64,14 @@ export class PropertiesService {
         },
       },
     });
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new Error(
+          `A property with number "${createPropertyDto.propertyNumber}" already exists. Please use a different property number.`
+        );
+      }
+      throw error;
+    }
   }
 
   async findAll() {

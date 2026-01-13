@@ -6,7 +6,10 @@ import {
   IsNumber,
   IsUUID,
 } from 'class-validator';
-import { UnitType } from '@prisma/client';
+// Import from generated Prisma client (workaround for monorepo module resolution)
+import type { UnitType } from '../../../../node_modules/.prisma/client';
+// Re-export for runtime
+const { UnitType: UnitTypeEnum } = require('@prisma/client');
 
 export class CreateUnitDto {
   @IsUUID()
@@ -15,7 +18,7 @@ export class CreateUnitDto {
   @IsString()
   unitNumber: string;
 
-  @IsEnum(UnitType)
+  @IsEnum(UnitTypeEnum)
   unitType: UnitType;
 
   @IsOptional()

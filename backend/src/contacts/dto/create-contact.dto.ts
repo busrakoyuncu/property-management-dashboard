@@ -1,9 +1,12 @@
 import { IsEnum, IsString, IsOptional, IsEmail } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ContactRole } from '@prisma/client';
+// Import from generated Prisma client (workaround for monorepo module resolution)
+import type { ContactRole } from '../../../../node_modules/.prisma/client';
+// Re-export for runtime
+const { ContactRole: ContactRoleEnum } = require('@prisma/client');
 
 export class CreateContactDto {
-  @IsEnum(ContactRole)
+  @IsEnum(ContactRoleEnum)
   role: ContactRole;
 
   @IsString()
