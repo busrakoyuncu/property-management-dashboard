@@ -260,8 +260,8 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
           />
         )}
 
-        {/* Unit Form (Add/Edit) - Show in both views */}
-        {(isAddingNew || editingIndex !== null) && (
+        {/* Unit Form (Add New Only) - Show at top when adding new */}
+        {isAddingNew && editingIndex === -1 && (
           <div className="mb-6">
             <UnitForm
               unit={currentUnit}
@@ -292,7 +292,7 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
         )}
 
         {/* Units List View */}
-        {viewMode === 'list' && formData.units.length > 0 && !showBulkImport && !showBulkPattern && !quickAddMode && (
+        {viewMode === 'list' && formData.units.length > 0 && !showBulkImport && !showBulkPattern && !quickAddMode && !isAddingNew && (
           <div className="space-y-4">
             {formData.units.map((unit, index) => (
               <div

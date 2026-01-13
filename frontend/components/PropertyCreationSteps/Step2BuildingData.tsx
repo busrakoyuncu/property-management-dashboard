@@ -108,8 +108,8 @@ export function Step2BuildingData({ formData, onUpdate, onEditingChange }: StepC
         )}
       </div>
 
-      {/* Building Form (Add/Edit) */}
-      {(isAddingNew || editingIndex !== null) && (
+      {/* Building Form (Add New Only) */}
+      {isAddingNew && editingIndex === -1 && (
         <BuildingForm
           building={currentBuilding}
           buildingTypes={buildingTypes}
