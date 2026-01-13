@@ -107,3 +107,8 @@ cd frontend && npm run test:coverage
 - Auto-fill all form fields with parsed data
 - Integrated into the property creation wizard
 
+## Video Demonstration
+
+Watch a walkthrough of the project:
+
+[Project Demo Video](https://www.loom.com/share/0f959d58b4984c56818d998823ccc08e)
