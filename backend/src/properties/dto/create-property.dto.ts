@@ -10,17 +10,14 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-// Import from generated Prisma client (workaround for monorepo module resolution)
-import type { ManagementType, BuildingType, UnitType } from '../../../../node_modules/.prisma/client';
-// Re-export for runtime
-const { ManagementType: ManagementTypeEnum, BuildingType: BuildingTypeEnum, UnitType: UnitTypeEnum } = require('@prisma/client');
+import { ManagementType, BuildingType, UnitType } from '@prisma/client';
 
 // Nested DTO for creating units within a building
 export class CreateUnitNestedDto {
   @IsString()
   unitNumber: string;
 
-  @IsEnum(UnitTypeEnum)
+  @IsEnum(UnitType)
   unitType: UnitType;
 
   @IsOptional()
@@ -86,7 +83,7 @@ export class CreateBuildingNestedDto {
   city: string;
 
   @IsOptional()
-  @IsEnum(BuildingTypeEnum)
+  @IsEnum(BuildingType)
   buildingType?: BuildingType;
 
   @IsOptional()
@@ -127,7 +124,7 @@ export class CreatePropertyDto {
   @IsString()
   name: string;
 
-  @IsEnum(ManagementTypeEnum)
+  @IsEnum(ManagementType)
   managementType: ManagementType;
 
   // Land registry
