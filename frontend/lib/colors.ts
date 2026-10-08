@@ -1,5 +1,5 @@
 /**
- * Buena Color Palette
+ * Application color palette
  * Centralized color definitions for consistent theming across the application
  */
 

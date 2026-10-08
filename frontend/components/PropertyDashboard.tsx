@@ -245,7 +245,7 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
         {properties.length > 0 && (
           <button
             onClick={handleCreateClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-buena-green/95"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-brand-green/95"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Create new property</span>
@@ -267,7 +267,7 @@ export function PropertyDashboard({ properties, onCreateNew, onDelete }: Propert
             </p>
             <button
               onClick={handleCreateClick}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-buena-green/95"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-green/95"
             >
               <Plus className="h-4 w-4" />
               Create new property

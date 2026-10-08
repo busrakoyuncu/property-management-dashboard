@@ -44,3 +44,6 @@ lerna-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Local-only case-study artifacts
+private/

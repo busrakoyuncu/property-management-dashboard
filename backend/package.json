@@ -1,7 +1,7 @@
 {
-  "name": "buena-property-backend",
+  "name": "propmanager-backend",
   "version": "1.0.0",
-  "description": "NestJS backend for Buena Property Management",
+  "description": "NestJS backend for PropManager",
   "author": "",
   "private": true,
   "license": "MIT",

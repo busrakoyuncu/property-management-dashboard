@@ -162,7 +162,7 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
                   onClick={() => setViewMode('table')}
                   className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                     viewMode === 'table'
-                      ? 'bg-buena-green text-white'
+                      ? 'bg-brand-green text-white'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -174,7 +174,7 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
                   onClick={() => setViewMode('list')}
                   className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                     viewMode === 'list'
-                      ? 'bg-buena-green text-white'
+                      ? 'bg-brand-green text-white'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -215,7 +215,7 @@ export function Step3Units({ formData, onUpdate, onEditingChange }: StepComponen
               <Button
                 type="button"
                 onClick={handleAddUnit}
-                className="rounded-full bg-buena-green hover:bg-buena-green/90"
+                className="rounded-full bg-brand-green hover:bg-brand-green/90"
                 size="sm"
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -630,7 +630,7 @@ function UnitForm({ unit, unitTypes, buildings, onSave, onCancel }: UnitFormProp
         </button>
         <button
           type="submit"
-          className="px-4 py-2 text-sm font-medium text-white bg-buena-green rounded-lg hover:bg-buena-green/90 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-white bg-brand-green rounded-lg hover:bg-brand-green/90 transition-colors"
         >
           <Check className="h-4 w-4 inline mr-2" />
           {unit ? 'Save Changes' : 'Add Unit'}

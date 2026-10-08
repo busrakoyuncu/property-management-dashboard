@@ -13,8 +13,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Buena Property Management',
-  description: 'Property Management Dashboard',
+  title: 'PropManager',
+  description: 'Property management dashboard',
 }
 
 export default function RootLayout({

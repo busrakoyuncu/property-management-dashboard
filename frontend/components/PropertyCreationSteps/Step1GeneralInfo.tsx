@@ -278,7 +278,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
   return (
     <div className="space-y-6">
       {/* AI-Powered PDF Upload Section */}
-      <div className="bg-buena-beige/20 border-2 border-buena-yellow/30 rounded-xl p-6">
+      <div className="bg-brand-beige/20 border-2 border-brand-yellow/30 rounded-xl p-6">
         <div className="flex items-start gap-4">
           <div className="flex-1">
             <h3 className="text-lg font-semibold mb-2 text-foreground flex items-center gap-2">
@@ -300,7 +300,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
                 type="button"
                 onClick={() => parseFileInputRef.current?.click()}
                 disabled={isParsing}
-                className="bg-buena-green hover:bg-buena-green/90 text-white rounded-full"
+                className="bg-brand-green hover:bg-brand-green/90 text-white rounded-full"
               >
                 {isParsing ? (
                   <>
@@ -315,7 +315,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
                 )}
               </Button>
               {parseSuccess && (
-                <div className="flex items-center gap-2 text-buena-green">
+                <div className="flex items-center gap-2 text-brand-green">
                   <CheckCircle className="h-4 w-4" />
                   <span className="text-sm font-medium">Successfully parsed!</span>
                 </div>
@@ -347,7 +347,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
             onClick={() => onUpdate({ managementType: 'WEG' })}
             className={`p-5 rounded-xl border-2 transition-all text-left ${
               formData.managementType === 'WEG'
-                ? 'border-buena-green bg-buena-green/5 shadow-sm'
+                ? 'border-brand-green bg-brand-green/5 shadow-sm'
                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50'
             }`}
           >
@@ -361,7 +361,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
             onClick={() => onUpdate({ managementType: 'MV' })}
             className={`p-5 rounded-xl border-2 transition-all text-left ${
               formData.managementType === 'MV'
-                ? 'border-buena-green bg-buena-green/5 shadow-sm'
+                ? 'border-brand-green bg-brand-green/5 shadow-sm'
                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50'
             }`}
           >
@@ -433,7 +433,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
           <label className="text-sm font-semibold text-foreground">
             Property Manager <span className="text-destructive">*</span>
             {formData.extractedPropertyManager && (
-              <span className="ml-2 text-xs text-buena-yellow font-normal">
+              <span className="ml-2 text-xs text-brand-yellow font-normal">
                 (Extracted from PDF)
               </span>
             )}
@@ -444,7 +444,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
               variant="ghost"
               size="sm"
               onClick={() => setIsPropertyManagerModalOpen(true)}
-              className="h-7 px-2 text-xs text-buena-green hover:text-buena-green/80 hover:bg-buena-green/10"
+              className="h-7 px-2 text-xs text-brand-green hover:text-brand-green/80 hover:bg-brand-green/10"
             >
               <Plus className="h-3 w-3 mr-1" />
               {formData.extractedPropertyManager ? 'Create from PDF' : 'Add New'}
@@ -475,7 +475,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
           )}
         </select>
         {formData.extractedPropertyManager && !formData.propertyManagerId && (
-          <p className="text-xs text-buena-yellow mt-1">
+          <p className="text-xs text-brand-yellow mt-1">
             Extracted: {formData.extractedPropertyManager.companyName} - Click &quot;Create from PDF&quot; to add this contact
           </p>
         )}
@@ -486,7 +486,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
           <label className="text-sm font-semibold text-foreground">
             Accountant <span className="text-destructive">*</span>
             {formData.extractedAccountant && (
-              <span className="ml-2 text-xs text-buena-yellow font-normal">
+              <span className="ml-2 text-xs text-brand-yellow font-normal">
                 (Extracted from PDF)
               </span>
             )}
@@ -497,7 +497,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
               variant="ghost"
               size="sm"
               onClick={() => setIsAccountantModalOpen(true)}
-              className="h-7 px-2 text-xs text-buena-green hover:text-buena-green/80 hover:bg-buena-green/10"
+              className="h-7 px-2 text-xs text-brand-green hover:text-brand-green/80 hover:bg-brand-green/10"
             >
               <Plus className="h-3 w-3 mr-1" />
               {formData.extractedAccountant ? 'Create from PDF' : 'Add New'}
@@ -528,7 +528,7 @@ export function Step1GeneralInfo({ formData, onUpdate }: StepComponentProps) {
           )}
         </select>
         {formData.extractedAccountant && !formData.accountantId && (
-          <p className="text-xs text-buena-yellow mt-1">
+          <p className="text-xs text-brand-yellow mt-1">
             Extracted: {formData.extractedAccountant.companyName} - Click &quot;Create from PDF&quot; to add this contact
           </p>
         )}

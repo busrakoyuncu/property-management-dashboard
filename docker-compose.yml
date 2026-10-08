@@ -1,39 +1,37 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: buena-postgres
+    container_name: propmanager-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-buena_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-buena_password}
-      POSTGRES_DB: ${POSTGRES_DB:-buena_db}
+      POSTGRES_USER: ${POSTGRES_USER:-propmanager_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-propmanager_password}
+      POSTGRES_DB: ${POSTGRES_DB:-propmanager_db}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-buena_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-propmanager_user}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - buena-network
+      - propmanager-network
 
   # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: buena-backend
+    container_name: propmanager-backend
     restart: unless-stopped
     env_file:
       - ./backend/.env
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://${POSTGRES_USER:-buena_user}:${POSTGRES_PASSWORD:-buena_password}@postgres:5432/${POSTGRES_DB:-buena_db}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-propmanager_user}:${POSTGRES_PASSWORD:-propmanager_password}@postgres:5432/${POSTGRES_DB:-propmanager_db}?schema=public
       PORT: 3001
     ports:
       - "3001:3001"
@@ -41,7 +39,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - buena-network
+      - propmanager-network
     command: sh -c "npx prisma migrate dev && npm run start:dev"
 
   # Frontend
@@ -49,7 +47,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: buena-frontend
+    container_name: propmanager-frontend
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -59,12 +57,12 @@ services:
     depends_on:
       - backend
     networks:
-      - buena-network
+      - propmanager-network
 
 volumes:
   postgres_data:
     driver: local
 
 networks:
-  buena-network:
+  propmanager-network:
     driver: bridge

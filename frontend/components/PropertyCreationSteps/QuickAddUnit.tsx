@@ -133,7 +133,7 @@ export function QuickAddUnit({ buildings, lastUnit, onSave, onCancel }: QuickAdd
         <Button
           type="submit"
           size="sm"
-          className="bg-buena-green hover:bg-buena-green/90 text-white"
+          className="bg-brand-green hover:bg-brand-green/90 text-white"
         >
           <Check className="h-3 w-3 mr-1" />
           Add & Continue

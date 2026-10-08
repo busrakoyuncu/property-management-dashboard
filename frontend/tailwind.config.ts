@@ -43,8 +43,7 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Buena brand colors
-        buena: {
+        brand: {
           yellow: '#fdc800',
           beige: '#cebda3',
           green: '#398958',

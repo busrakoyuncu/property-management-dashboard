@@ -64,7 +64,7 @@ export function BulkUnitPattern({ buildings, onGenerate, onCancel }: BulkUnitPat
     <div className="space-y-4 border rounded-lg p-4 bg-muted/30">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-buena-yellow" />
+          <Sparkles className="h-4 w-4 text-brand-yellow" />
           <h4 className="font-semibold text-foreground">Generate Units from Pattern</h4>
         </div>
         <button
@@ -214,7 +214,7 @@ export function BulkUnitPattern({ buildings, onGenerate, onCancel }: BulkUnitPat
         <Button
           onClick={handleGenerate}
           disabled={!pattern.meaShare || !pattern.buildingId}
-          className="bg-buena-green hover:bg-buena-green/90"
+          className="bg-brand-green hover:bg-brand-green/90"
         >
           Generate {pattern.count} Units
         </Button>

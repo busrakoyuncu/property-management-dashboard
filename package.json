@@ -1,7 +1,7 @@
 {
-  "name": "buena-case-study",
+  "name": "propmanager",
   "version": "1.0.0",
-  "description": "Buena Tech Case Study - Property Management Dashboard",
+  "description": "PropManager - full-stack property management dashboard",
   "private": true,
   "workspaces": [
     "frontend",

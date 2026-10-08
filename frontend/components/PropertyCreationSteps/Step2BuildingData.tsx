@@ -100,7 +100,7 @@ export function Step2BuildingData({ formData, onUpdate, onEditingChange }: StepC
           <button
             type="button"
             onClick={handleAddBuilding}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-buena-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-buena-green/90"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-green px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-green/90"
           >
             <Plus className="h-4 w-4" />
             Add Building
@@ -437,7 +437,7 @@ function BuildingForm({ building, buildingTypes, onSave, onCancel }: BuildingFor
         </button>
         <button
           type="submit"
-          className="px-4 py-2 text-sm font-medium text-white bg-buena-green rounded-lg hover:bg-buena-green/90 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-white bg-brand-green rounded-lg hover:bg-brand-green/90 transition-colors"
         >
           <Check className="h-4 w-4 inline mr-2" />
           {building ? 'Save Changes' : 'Add Building'}

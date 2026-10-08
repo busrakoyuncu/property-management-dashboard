@@ -225,7 +225,7 @@ export function PropertyCreationModal({
                       <div
                         className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm border-2 transition-all ${
                           isCompleted || isActive
-                            ? 'bg-buena-yellow border-buena-yellow text-white'
+                            ? 'bg-brand-yellow border-brand-yellow text-white'
                             : 'bg-background border-gray-300 text-gray-400'
                         }`}
                       >
@@ -247,7 +247,7 @@ export function PropertyCreationModal({
                       <div className="flex-1 flex items-center px-4 mt-[18px]">
                         <div
                           className={`w-full h-0.5 transition-colors ${
-                            isCompleted ? 'bg-buena-yellow' : 'bg-gray-300'
+                            isCompleted ? 'bg-brand-yellow' : 'bg-gray-300'
                           }`}
                         />
                       </div>
@@ -308,7 +308,7 @@ export function PropertyCreationModal({
               type="button"
               onClick={step === 3 ? handleSubmit : handleNext}
               disabled={!isStepValid() || isSubmitting}
-              className="rounded-full bg-buena-green hover:bg-buena-green/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full bg-brand-green hover:bg-brand-green/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {step === 3 ? (
                 isSubmitting ? 'Creating...' : 'Create Property'

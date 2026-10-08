@@ -229,7 +229,7 @@ export function CreateContactModal({
             <Button
               type="submit"
               disabled={isLoading || !formData.companyName.trim()}
-              className="rounded-full bg-buena-green hover:bg-buena-green/90 text-white"
+              className="rounded-full bg-brand-green hover:bg-brand-green/90 text-white"
             >
               {isLoading ? (
                 <>

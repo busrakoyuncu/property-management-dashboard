@@ -185,11 +185,11 @@ export function BulkUnitImport({ buildings, onImport, onCancel }: BulkUnitImport
       )}
 
       {preview.length > 0 && errors.length === 0 && (
-        <div className="p-3 bg-buena-green/10 border border-buena-green/20 rounded-lg">
+        <div className="p-3 bg-brand-green/10 border border-brand-green/20 rounded-lg">
           <div className="flex items-start gap-2">
-            <CheckCircle className="h-4 w-4 text-buena-green mt-0.5" />
+            <CheckCircle className="h-4 w-4 text-brand-green mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-buena-green">
+              <p className="text-sm font-medium text-brand-green">
                 Ready to import {preview.length} units
               </p>
             </div>
@@ -204,7 +204,7 @@ export function BulkUnitImport({ buildings, onImport, onCancel }: BulkUnitImport
         <Button
           onClick={handleImport}
           disabled={preview.length === 0 || errors.length > 0}
-          className="bg-buena-green hover:bg-buena-green/90"
+          className="bg-brand-green hover:bg-brand-green/90"
         >
           Import {preview.length} Units
         </Button>
